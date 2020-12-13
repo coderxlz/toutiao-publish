@@ -1,5 +1,5 @@
 <template>
-  <div class="aside">
+  <div class="aside clearfix">
   <el-col :span="12">
     <el-menu
       :default-active="currentIndex"
@@ -8,7 +8,9 @@
       @close="handleClose"
       text-color="#fff"
       active-text-color="#ffd04b"
-      router>
+      router
+      :collapse="asideShow"
+      >
       <el-menu-item index="/">
         <i class="el-icon-menu"></i>
         <span slot="title">首页</span>
@@ -52,6 +54,10 @@ export default {
       currentIndex: "/"
     }
   },
+  props: {
+    // 侧边栏是否折叠
+    asideShow: false
+  },
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -64,11 +70,16 @@ export default {
 </script>
 
 <style scoped>
+.aside .el-col-12 {
+  width: 100%;
+}
+
+.el-menu{
+  height: 100vh;
+}
+
 .aside .el-menu{
-  width: 200px;
-  position: fixed;
-  top: 0;
-  bottom: 0;
   background-color: rgb(0,32,57)
 }
+
 </style>

@@ -1,14 +1,17 @@
 <template>
-  <el-container>
+  <el-container class="wrap">
     <!-- 侧边栏 -->
-    <el-aside width="200px">
-      <aside-menu/>
+    <el-aside width="auto">
+      <aside-menu
+       :asideShow="asideShow"/>
     </el-aside>
     <el-container>
       <!-- 顶部栏 -->
       <el-header>
         <head-menu
-          :photo="user && user.photo"/>
+          :photo="user && user.photo"
+          :name="user && user.name"
+          @showChange="asideShow = !asideShow"/>
       </el-header>
       <el-main>
         <!-- 子路由出口 -->
@@ -34,7 +37,9 @@ export default {
   data () {
     return {
       // 用户个人信息对象
-      user: null
+      user: null,
+      // 侧边栏是否折叠
+      asideShow: false
     }
   },
   methods: {
@@ -55,5 +60,15 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.el-aside,.el-header{
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.wrap .el-main{
+  height: calc(100vh - 62px);
+  overflow-y: scroll;
+}
 </style>

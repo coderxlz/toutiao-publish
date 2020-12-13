@@ -1,7 +1,10 @@
 <template>
   <div class="headmenu">
     <div>
-    <el-button type="default" icon="el-icon-s-fold"></el-button>
+    <el-button 
+      type="default" 
+      :icon="asideShow? 'el-icon-s-unfold':'el-icon-s-fold'"
+      @click="onClick"></el-button>
     <span>头条新闻后台管理系统</span>
     </div>
     
@@ -13,9 +16,10 @@
       <el-submenu index="1">
         <template slot="title">
           <el-avatar :size="40" :src="photo"/>
+          <span> {{ name }}</span>
         </template>
-        <el-menu-item index="1-1">个人</el-menu-item>
-        <el-menu-item index="1-2">设置</el-menu-item>
+        <el-menu-item index="1-1">个人设置</el-menu-item>
+        <el-menu-item index="1-2">退出登录</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -26,15 +30,22 @@ export default {
   name: "HeadMenu",
   data() {
     return {
-
+      // 是否显示侧边栏
+      asideShow: false
     };
   },
   props: {
     // 用户头像
-    photo: ""
+    photo: "",
+    // 用户名称
+    name: "",
+    
   },
   methods: {
-    
+    onClick() {
+      this.$emit('showChange')
+      this.asideShow = !this.asideShow
+    }
   },
 };
 </script>
@@ -47,6 +58,8 @@ export default {
   border-bottom: 1px solid #aaa;
   padding-left: 0;
   padding-right: 0;
+  position: relative;
+  z-index: 9;
 }
 
 .headmenu .el-button--default{
@@ -54,4 +67,5 @@ export default {
   border: none;
   padding-left: 0;
 }
+
 </style>

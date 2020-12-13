@@ -6,7 +6,13 @@
       </div>
       <!-- el-from为element-ui中的表单组件，其中from表单会双向绑定一个数据对象，例如user
     里面的属性分别对应form-item中双向绑定的数据 -->
-      <el-form ref="form" :model="user" label-width="80px" :rules="rules">
+      <el-form 
+        ref="form" 
+        :model="user" 
+        label-width="80px" 
+        :rules="rules"
+        hide-required-asterisk
+      >
         <el-form-item label="手机号码" prop="mobile">
           <el-input
             v-model="user.mobile"
