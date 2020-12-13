@@ -19,7 +19,9 @@
           <span> {{ name }}</span>
         </template>
         <el-menu-item index="1-1">个人设置</el-menu-item>
-        <el-menu-item index="1-2">退出登录</el-menu-item>
+        <el-menu-item 
+          index="1-2"
+          @click.native="logOut">退出登录</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -42,9 +44,18 @@ export default {
     
   },
   methods: {
+    // 收起展开侧边栏
     onClick() {
       this.$emit('showChange')
       this.asideShow = !this.asideShow
+    },
+    
+    // 用户退出登录
+    logOut () {
+      // 清空本地以及内存中localStorage
+      this.$store.commit('clearToken')
+      // 跳转到登录页面
+      this.$router.replace('/login')
     }
   },
 };

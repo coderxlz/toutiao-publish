@@ -131,6 +131,11 @@ export default {
           token: data.data.token,
           refresh_token: data.data.refresh_token
         })
+        // 持久化token数据
+        store.commit('localToken',{
+          token: data.data.token,
+          refresh_token: data.data.refresh_token
+        })
         // 跳转到主页
         this.$router.replace('/')
       } catch (e) {
