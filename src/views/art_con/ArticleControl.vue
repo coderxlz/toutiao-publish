@@ -222,13 +222,21 @@ export default {
         }
       });
     },
+
     // 重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+
     // 编辑文章
     handleEdit(index, row) {
-      console.log(index, row);
+      // 在文章发布页面进行文章的编辑，将文章id发送到文章编辑页面
+      this.$router.push({
+        name: 'art_pub',
+        query: {
+          art_id: row.id
+        }
+      })
     },
 
     // 删除文章

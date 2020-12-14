@@ -24,3 +24,23 @@ export const deleteArt = (target) => {
     method: 'DELETE'
   })
 }
+
+// 发布文章，默认情况下不保存文章为草稿
+export const publishArt = (data,draft = false) => {
+  return tokenRequest({
+    url: '/mp/v1_0/articles',
+    method: 'POST',
+    data,
+    params: {
+      draft
+    }
+  })
+}
+
+// 根据id请求文章数据
+export const getArtById = (art_id) => {
+  return tokenRequest({
+    url: `/mp/v1_0/articles/${art_id}`,
+    method: 'GET'
+  })
+}
