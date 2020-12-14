@@ -16,6 +16,8 @@
         :headers= headers
         name="image"
         multiple
+        :show-file-list="false"
+        :on-success="success"
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -39,6 +41,13 @@ export default {
         // 有效token
         Authorization: "Bearer "+"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MzkxMjc3NzYsInVzZXJfaWQiOjEsInJlZnJlc2giOmZhbHNlLCJ2ZXJpZmllZCI6dHJ1ZX0.3-31SHtuuJtJUJpMFn8AowN3LDUKOMi2H1-D_lXsz00"
       }
+    }
+  },
+  methods: {
+    // 文件上传成功
+    success() {
+      this.dialogVisible = false
+      this.$emit('refresh')
     }
   },
   props: {

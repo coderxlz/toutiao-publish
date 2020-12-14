@@ -17,3 +17,22 @@ export const uploadImage = data => {
     data
   })
 }
+
+// 收藏图片素材
+export const starImage = (img_id,collect) => {
+  return tokenRequest({
+    url: `/mp/v1_0/user/images/${img_id}`,
+    method: 'PUT',
+    data: {
+      collect
+    }
+  })
+}
+
+// 删除图片素材
+export const deleteImage = img_id => {
+  return tokenRequest({
+    url: `/mp/v1_0/user/images/${img_id}`,
+    method: 'DELETE'
+  })
+}

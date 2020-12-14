@@ -32,6 +32,7 @@
       <image-item
         :imageList="imageList"
         :urlList="urlList"
+        @refresh="loadImages()"
       />
       <el-pagination 
         background 
@@ -43,7 +44,10 @@
       ></el-pagination>
     </el-card>
     <!-- 上传图片部分 -->
-    <upload-dialog :ifShow.sync="ifDialogShow" />
+    <upload-dialog 
+      :ifShow.sync="ifDialogShow"
+      @refresh="loadImages()"
+    />
   </div>
 </template>
 
@@ -98,7 +102,6 @@ export default {
         this.total_count = data.data.total_count
         this.imageList = data.data.results;
         console.log("请求到的图片列表数据", this.imageList);
-        this.imageLoading = false;
       } catch (e) {
         if (e && e.response && e.response.status) {
           let status = e.response.status;
@@ -107,15 +110,15 @@ export default {
               message: "用户认证失败，请重新登录",
               type: "warning",
             });
-            this.imageLoading = false;
           } else if (status === 507) {
             this.$message({
               message: "服务器异常",
               type: "danger",
-            });
-            this.imageLoading = false;
+            }); 
           }
         }
+      }finally{
+        this.imageLoading = false
       }
     },
     radioChange (val) {

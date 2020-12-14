@@ -35,7 +35,7 @@ export const tokenRequest = (config) => {
         return JSONbig.parse(data)
       }
       catch(e) {
-        console.log('转换失败')
+        console.log('转换失败',data)
         return data
       }
     }]
