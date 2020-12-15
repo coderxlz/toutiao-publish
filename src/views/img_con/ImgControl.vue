@@ -122,6 +122,8 @@ export default {
       }
     },
     radioChange (val) {
+      // 修改页码为1，防止出现全部与收藏页码相同问题
+      this.page = 1
       console.log(val)
       // 选中单选框值为0时，表示全部，draft为false
       val == 0?this.collect = false : this.collect = true

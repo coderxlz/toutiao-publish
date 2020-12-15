@@ -44,3 +44,17 @@ export const getArtById = (art_id) => {
     method: 'GET'
   })
 }
+
+// 修改文章评论状态
+export const chagneComStatus = (article_id,allow_comment) => {
+  return tokenRequest({
+    url: '/mp/v1_0/comments/status',
+    method: 'PUT',
+    params: {
+      article_id
+    },
+    data: {
+      allow_comment
+    }
+  })
+}

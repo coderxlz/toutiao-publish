@@ -16,23 +16,23 @@
         <span slot="title">首页</span>
       </el-menu-item>
       <el-menu-item index="/art_con">
-        <i class="el-icon-menu"></i>
+        <i class="el-icon-s-grid"></i>
         <span slot="title">内容管理</span>
       </el-menu-item>
       <el-menu-item index="/img_con">
-        <i class="el-icon-document"></i>
+        <i class="el-icon-picture-outline"></i>
         <span slot="title">素材管理</span>
       </el-menu-item>
       <el-menu-item index="/art_pub">
-        <i class="el-icon-setting"></i>
+        <i class="el-icon-s-promotion"></i>
         <span slot="title">发布文章</span>
       </el-menu-item>
       <el-menu-item index="/com_con">
-        <i class="el-icon-menu"></i>
+        <i class="el-icon-info"></i>
         <span slot="title">评论管理</span>
       </el-menu-item>
       <el-menu-item index="/fan_con">
-        <i class="el-icon-document"></i>
+        <i class="el-icon-data-analysis"></i>
         <span slot="title">粉丝管理</span>
       </el-menu-item>
       <el-menu-item index="/settings">

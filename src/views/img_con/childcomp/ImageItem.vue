@@ -166,6 +166,8 @@ export default {
 }
 
 #bottomBar .el-button {
+  height: 0;
+  transition: all .3s;
   visibility: hidden;
 }
 
@@ -174,6 +176,7 @@ export default {
 }
 
 .el-col:hover #bottomBar .el-button {
+  height: 32px;
   visibility: visible;
 }
 </style>

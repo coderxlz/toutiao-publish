@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <h1>我是主页</h1>
   </div>
 </template>
 
@@ -10,6 +9,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.home{
+  width: 100%;
+  height: 100%;
+  background-image: url('./img/ocean.jpeg');
+  background-size: cover;
+}
 </style>

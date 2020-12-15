@@ -48,7 +48,6 @@ export default {
       try{
         const { data } = await getUserInfo()
         const getData = data.data
-        console.log('用户个人信息',getData)
         this.user = getData
       }
       catch(e)

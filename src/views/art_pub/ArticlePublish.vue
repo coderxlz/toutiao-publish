@@ -34,11 +34,20 @@
         </el-form-item>
         <el-form-item label="封面" prop="cover">
           <el-radio-group v-model="pubForm.cover">
-            <el-radio label="-1">自动</el-radio>
-            <el-radio label="0">无图</el-radio>
-            <el-radio label="1">单图</el-radio>
-            <el-radio label="3">三图</el-radio>
+            <el-radio :label="1">单图</el-radio>
+            <el-radio :label="3">三图</el-radio>
+            <el-radio :label="-1">自动</el-radio>
+            <el-radio :label="0">无图</el-radio>
           </el-radio-group>
+          <!-- 上传图片预览模块 -->
+          <div class="uploadImage" v-if="pubForm.cover > 0">
+            <select-image
+              v-for="(item,index) in pubForm.cover"
+              :key="index"
+              @click.native="uploadClick(index)"
+              :url="urlList !== [] && urlList[index]"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="频道" prop="channel">
           <el-select placeholder="请选择频道" v-model="pubForm.channel">
@@ -61,6 +70,12 @@
         </el-form-item>
       </el-form>
     </el-card>
+    <!-- 上传封面弹出层 -->
+    <cover-dialog
+      :ifShow.sync="ifShow"
+      @getUrl="urlList.push($event)"
+      :nowUrl="nowUrl"
+    />
   </div>
 </template>
 
@@ -73,11 +88,15 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 
 import { quillEditor } from "vue-quill-editor";
+import CoverDialog from './childcomp/CoverDialog.vue';
+import SelectImage from './childcomp/SelectImage.vue';
 
 export default {
   name: "ArticlePublish",
   components: {
     quillEditor,
+    CoverDialog,
+    SelectImage
   },
   created() {
     // 请求频道列表数据
@@ -100,7 +119,7 @@ export default {
       pubForm: {
         title: "",
         content: "",
-        cover: "",
+        cover: 0,
         channel: "",
       },
       // 富文本编辑器quill配置
@@ -140,6 +159,12 @@ export default {
       pub_loading: false,
       // 所要编辑的文章id
       edit_id: this.$route.query && this.$route.query.art_id,
+      // 上传封面弹出层是否显示
+      ifShow: false,
+      // 图片url数组
+      urlList: [],
+      // 当前点击的图片url
+      nowUrl: null
     };
   },
   methods: {
@@ -219,7 +244,17 @@ export default {
       console.log("editor change!", quill, html, text);
       this.content = html;
     },
+
+    // 点击上传图片按钮
+    uploadClick (index) {
+      this.ifShow = true
+      if( this.urlList !== []) {
+        this.nowUrl = this.urlList[index]
+      }
+    }
   },
+
+  
 };
 
 // // 重写图片上传
@@ -256,5 +291,9 @@ export default {
 
 .content {
   height: 400px;
+}
+
+.uploadImage{
+  display: flex;
 }
 </style>
