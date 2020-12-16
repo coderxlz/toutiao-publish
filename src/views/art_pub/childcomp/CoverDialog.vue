@@ -3,6 +3,7 @@
     <el-dialog 
       title="上传封面" 
       :visible.sync="DialogVisible"
+      @open="dialogOpen"
     >
       <el-tabs type="border-card">
         <el-tab-pane label="素材库">
@@ -39,19 +40,7 @@ export default {
   mounted() {
     // 接受ImageItem发送过来用户所选择的图片对象
     this.$bus.$on('selectImage',item => {
-      console.log('接收到的图片对象',item)
-      if(this.urlList.length < this.imageCount) {
-        this.urlList.push(item.url)
-        this.$message({
-          message: '图片添加成功',
-          type: 'success'
-        })
-        return
-      }
-      this.$message({
-        message: '所选图片达到最大张数，无法继续选择',
-        type: 'warning'
-      })
+      this.urlList[this.currentIndex] = item.url
     })
   },
   data(){
@@ -64,7 +53,9 @@ export default {
       // 之前的文件对象
       fileObj: null,
       // 当前选择图片的url列表
-      urlList: []
+      urlList: [],
+      // 接收到的图片对象
+      item: null
     };
   },
   props: {
@@ -82,11 +73,12 @@ export default {
         return ''
       }
     },
-    // 用户选择的封面种类，即图片个数
-    imageCount: {
+
+    // 当前点击图片的索引
+    currentIndex: {
       required: true,
       default() {
-        return 0
+        return false
       }
     }
   },
@@ -104,22 +96,30 @@ export default {
         this.fileObj = getFile
       }
       const url = window.URL.createObjectURL(getFile)
-      if(this.urlList.length !== this.imageCount) {
         // 将url存进url列表
-        this.urlList.push(url)
-      }
+      this.urlList[this.currentIndex] = url
+      
     },
     // 确认选择时，将当前选择图片列表urlList传递给父组件
     confirm() {
       this.$refs.file.value = ""
       this.DialogVisible = false
       // 只有在非编辑模式下才会传递urlList
-      if(!this.ifEdit && this.urlList.length <= this.imageCount) {
+      if( !this.ifEdit ) {
         this.$emit('getUrl',this.urlList)
+        this.$message({
+          message: '图片添加成功',
+          type: 'success'
+        })
         return
       }
       
     },
+
+    // 对话框完全打开时，发送全局事件，清除ImageItem中的选中item列表
+    dialogOpen() {
+      this.$bus.$emit('clearSelected')
+    }
     // // 默认情况下，打开对话框不可编辑
     // dialogOpen() {
     //   this.ifEdit = true

@@ -52,10 +52,17 @@ export default {
     
     // 用户退出登录
     logOut () {
-      // 清空本地以及内存中localStorage
-      this.$store.commit('clearToken')
-      // 跳转到登录页面
-      this.$router.replace('/login')
+      this.$confirm('此操作将退出登录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        // 清空本地以及内存中localStorage
+        this.$store.commit('clearToken')
+        // 跳转到登录页面
+        this.$router.replace('/login')
+      }).catch(() => {});
     }
   },
 };

@@ -140,26 +140,9 @@ export default {
         })
         // 跳转到主页
         this.$router.replace('/')
-      } catch (e) {
-        if (e && e.response && e.response.status) {
-          switch (e.response.status) {
-            case 400:
-              this.$message.closeAll();
-              this.$message("号码或验证码错误");
-              this.loading = false;
-              break;
-            case 403:
-              this.$message.closeAll();
-              this.$message("权限不足");
-              this.loading = false;
-              break;
-            case 507:
-              this.$message.closeAll();
-              this.$message("服务器异常");
-              this.loading = false;
-              break;
-          }
-        }
+      } catch (e) {} 
+      finally{
+        this.loading = false
       }
     },
   },

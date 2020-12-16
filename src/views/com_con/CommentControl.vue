@@ -114,27 +114,8 @@ export default {
           message: '修改成功',
           type: 'success'
         })
-      } catch (e) {
-        if( e && e.response && e.response.status) {
-          switch(e.response.status) {
-            case 401:
-              this.$message({
-                message: '用户认证失败，请重新登录',
-                type: 'danger'
-              });break
-            case 507:
-              this.$message({
-                message: '服务器异常',
-                type: 'danger'
-              });break
-            default:
-              this.$message({
-                message: '参数错误，请稍后再试',
-                type: 'warning'
-              });break
-          }
-        }
-      }finally{
+      } catch (e) {}
+      finally{
         this.switchDisabled = false
       }
     },
@@ -151,22 +132,8 @@ export default {
         this.total_count = getData.total_count
         this.tableData = getData.results
         console.log('列表数据',this.tableData)
-      } catch (e) {
-        if( e && e.response && e.response.status) {
-          switch(e.response.status) {
-            case 401:
-              this.$message({
-                message: '用户认证失败，请重新登录',
-                type: 'danger'
-              });break
-            case 507:
-              this.$message({
-                message: '服务器异常',
-                type: 'danger'
-              });break
-          }
-        }
-      }finally{
+      } catch (e) {}
+      finally{
         this.tableLoading = false
       }
     }

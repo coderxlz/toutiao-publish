@@ -145,22 +145,7 @@ export default {
         console.log('用户个人资料',data)
         // 将请求到的数据保存到data之中
         this.ruleForm = data.data
-      } catch (e) {
-        if(e && e.response && e.response.status ) {
-          switch(e.response.status) {
-            case 401:
-              this.$message({
-                message: '用户认证失败，请重新登录',
-                type: 'danger'
-              });break
-            case 507:
-              this.$message({
-                message: '服务器异常',
-                type: 'danger'
-              });break
-          }
-        }
-      }
+      } catch (e) {}
     },
 
     // 提交表单
@@ -180,22 +165,8 @@ export default {
             type: 'info'
           })
           this.getUserDetail()
-          } catch (e) {
-            if(e && e.response && e.response.status ) {
-              switch(e.response.status) {
-                case 401:
-                  this.$message({
-                    message: '用户认证失败，请重新登录',
-                    type: 'danger'
-                  });break
-                case 507:
-                  this.$message({
-                    message: '服务器异常',
-                    type: 'danger'
-                  });break
-              }
-            }
-          }finally{
+          } catch (e) {}
+          finally{
             this.isLoading = false
           }
         }else{

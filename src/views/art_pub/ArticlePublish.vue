@@ -75,7 +75,7 @@
       :ifShow.sync="ifShow"
       @getUrl="urlList = $event"
       :nowUrl="nowUrl"
-      :imageCount="pubForm.cover"
+      :currentIndex="currentIndex"
     />
     <!-- 使用imageCount将当前选择的图片个数传递过去，限制用户选择 -->
   </div>
@@ -167,7 +167,9 @@ export default {
       // 图片url数组
       urlList: [],
       // 当前点击的图片url
-      nowUrl: null
+      nowUrl: null,
+      // 当前选择图片的索引
+      currentIndex: null
     };
   },
   methods: {
@@ -213,24 +215,8 @@ export default {
               type: "success",
             });
             this.$router.push('/art_con')
-          } catch (e) {
-            if (e && e.response && e.response.status) {
-              switch (e.response.status) {
-                case 401:
-                  this.$message({
-                    message: "请先登录",
-                    type: "warning",
-                  });
-                  break;
-                case 507:
-                  this.$message({
-                    message: "服务器或数据库异常，请稍后重试",
-                    type: "warning",
-                  });
-                  break;
-              }
-            }
-          } finally {
+          } catch (e) {} 
+          finally {
             this.pub_loading = false;
           }
         }else{
@@ -251,6 +237,7 @@ export default {
 
     // 点击上传图片按钮
     uploadClick (index) {
+      this.currentIndex = index
       this.ifShow = true
       if( this.urlList !== []) {
         this.nowUrl = this.urlList[index]

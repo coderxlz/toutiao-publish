@@ -107,22 +107,8 @@ export default {
         });
         this.total_count = data.data.total_count
         this.imageList = data.data.results;
-      } catch (e) {
-        if (e && e.response && e.response.status) {
-          let status = e.response.status;
-          if (status === 401) {
-            this.$message({
-              message: "用户认证失败，请重新登录",
-              type: "warning",
-            });
-          } else if (status === 507) {
-            this.$message({
-              message: "服务器异常",
-              type: "danger",
-            }); 
-          }
-        }
-      }finally{
+      } catch (e) {}
+      finally{
         this.imageLoading = false
       }
     },

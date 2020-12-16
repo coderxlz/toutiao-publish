@@ -50,10 +50,7 @@ export default {
         const getData = data.data
         this.user = getData
       }
-      catch(e)
-      {
-
-      }
+      catch(e){}
     }
   }
 };

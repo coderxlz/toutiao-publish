@@ -258,28 +258,7 @@ export default {
           });
           // 删除成功之后自动刷新当前页面数据
           this.getTableData()
-          } catch (e) {
-            if (e && e.response && e.response.status) {
-              console.log(e.response.status)
-              switch (e.response.status) {
-                case 400:
-                  this.$message({
-                    type: "warning",
-                    message: "指定文章有误！"
-                  });break
-                case 401:
-                  this.$message({
-                    type: "warning",
-                    message: "用户验证失败！"
-                  });break
-                case 507:
-                  this.$message({
-                    type: "warning",
-                    message: "服务器或数据库异常!"
-                  });break
-              }
-            }
-          }
+          } catch (e) {}
         })
         .catch(() => {});
     },

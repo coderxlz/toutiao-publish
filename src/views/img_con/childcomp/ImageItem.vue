@@ -9,11 +9,17 @@
         v-for="(item, index) in imageList"
         :key="index"
       >
+      <div class="image-box">
         <el-image
           :src="item.url"
           fit="cover"
           :preview-src-list="urlList"
         ></el-image>
+        <!-- 选中状态模态框 -->
+        <div class="module" v-show="selectItem === item">
+          <i class="el-icon-success"></i>
+        </div>
+      </div>
         <!-- 操作栏 -->
         <div id="bottomBar">
           <el-button
@@ -60,12 +66,20 @@ import { starImage, deleteImage } from "@/network/image.js";
 
 export default {
   name: "ImageItem",
+  mounted(){
+    this.$bus.$on('clearSelected',() => {
+      // 封面选择对话框完全打开，清空选中图片列表从而初始化
+      this.selectList = []
+    })
+  },
   data(){
     return {
       // 按钮是否处于加载状态
     isLoading: false,
     // 文章是否处于收藏状态
-    isStar: false
+    isStar: false,
+    // 当前选中图片
+    selectItem: null
     }
   },
   props: {
@@ -89,7 +103,10 @@ export default {
       default() {
         return false
       }
-    }
+    },
+    
+    // 当前图片是否被选中
+    ifSelected: false
   },
   methods: {
     // 收藏图片
@@ -106,22 +123,8 @@ export default {
         })
         // 修改完成后向父组件提交refresh事件要求刷新image列表
         this.$emit('refresh')
-      } catch (e) {
-        if(e && e.response && e.response.status) {
-          switch(e.response.status) {
-            case 401:
-              this.$message({
-                message: '账号验证失败，请重新登录',
-                type: 'success'
-              });break
-            case 507:
-              this.$message({
-                message: '服务器异常',
-                type: 'success'
-              });break
-          }
-        }
-      }finally{
+      } catch (e) {}
+      finally{
         this.isLoading = false
       }
     },
@@ -135,28 +138,14 @@ export default {
         })
         // 修改完成后向父组件提交refresh事件要求刷新image列表
         location.reload()
-      } catch (e) {
-        if(e && e.response && e.response.status) {
-          switch (e.response.status) {
-            case 401:
-              this.$message({
-                message: '用户验证失败，请重新登录',
-                type: 'warning'
-              });break
-            case 507:
-              this.$message({
-                message: '服务器异常',
-                type: 'warning'
-              });break
-          }
-        }
-      }finally{
+      } catch (e) {}
+      finally{
         this.isLoading = false
       }
     },
     // 提交图片
     selectImage(item) {
-      // 将当前选择图片的url通过事件总线交给CoverDialog对话框进行处理
+      this.selectItem = item
       this.$bus.$emit('selectImage',item)
     }
   },
@@ -204,5 +193,22 @@ export default {
 .el-col:hover #bottomBar .el-button {
   height: 32px;
   visibility: visible;
+}
+
+.image-box{
+  position: relative;
+}
+
+.image-box .module {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, .4);
+  font-size: 50px;
+  text-align: center;
+  line-height: 170px;
+  color: green;
 }
 </style>
