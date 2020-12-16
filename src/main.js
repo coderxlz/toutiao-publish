@@ -9,6 +9,9 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI);
 
+// 创建事件总线对象
+Vue.prototype.$bus = new Vue()
+
 new Vue({
   router,
   store,

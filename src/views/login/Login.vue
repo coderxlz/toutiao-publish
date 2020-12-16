@@ -105,6 +105,9 @@ export default {
       //对整个表单进行校验的方法，参数为一个回调函数。该回调函数会在校验结束后被调用，
       // 并传入两个参数：是否校验成功和未通过校验的字段。若不传入回调函数，
       // 则会返回一个 promise
+
+      // 注意：此处最好使用箭头函数，因为在该回调函数中的this并不是指向当前组件对象，
+      // 而箭头函数永远指向的是外层的它定时时候的对象
       this.$refs.form.validate((pass, obj) => {
         if (pass) {
           // 通过验证，发送登录请求
@@ -123,7 +126,6 @@ export default {
           mobile: this.user.mobile,
           code: this.user.code,
         });
-        console.log(data)
         this.loading = false;
         this.$message("登录成功");
         // 登录成功，保存token信息

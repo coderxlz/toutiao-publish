@@ -1,11 +1,11 @@
 <template>
   <div class="img_con">
     <el-card class="box-card" :loading="imageLoading">
-      <div slot="header" class="clearfix">
-        <el-breadcrumb separator=">">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>素材管理</el-breadcrumb-item>
-        </el-breadcrumb>
+      <div slot="header" class="clearfix" v-if="!useAgain">
+          <el-breadcrumb  separator=">">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>素材管理</el-breadcrumb-item>
+          </el-breadcrumb>
       </div>
       <div class="operate">
         <el-radio-group 
@@ -21,18 +21,21 @@
             :loading="imageLoading"
           >收藏</el-radio-button>
         </el-radio-group>
-        <el-button
-          type="success"
-          size="small"
-          @click="ifDialogShow = !ifDialogShow"
-          >上传素材</el-button
-        >
+          <el-button
+            v-if="!useAgain"
+            type="success"
+            size="small"
+            @click="ifDialogShow = !ifDialogShow"
+            >上传素材</el-button
+          >
       </div>
       <!-- 图片展示区域，使用layout布局适配不同屏幕 -->
+      <!-- 将当前组件是否复用布尔值传递给子组件从而实现按钮定制 -->
       <image-item
         :imageList="imageList"
         :urlList="urlList"
         @refresh="loadImages()"
+        :useAgain=useAgain
       />
       <el-pagination 
         background 
@@ -83,6 +86,9 @@ export default {
       total_count: 0
     };
   },
+  props: {
+    useAgain: false
+  },
   methods: {
     // 点击页码时，数据改变
     pageChange(current_page) {
@@ -101,7 +107,6 @@ export default {
         });
         this.total_count = data.data.total_count
         this.imageList = data.data.results;
-        console.log("请求到的图片列表数据", this.imageList);
       } catch (e) {
         if (e && e.response && e.response.status) {
           let status = e.response.status;
@@ -124,7 +129,6 @@ export default {
     radioChange (val) {
       // 修改页码为1，防止出现全部与收藏页码相同问题
       this.page = 1
-      console.log(val)
       // 选中单选框值为0时，表示全部，draft为false
       val == 0?this.collect = false : this.collect = true
       this.loadImages()
@@ -141,7 +145,7 @@ export default {
       });
       return srcList;
     },
-  },
+  }
 };
 </script>
 

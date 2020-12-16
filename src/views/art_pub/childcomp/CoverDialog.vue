@@ -3,10 +3,13 @@
     <el-dialog 
       title="上传封面" 
       :visible.sync="DialogVisible"
-      @opened="dialogOpen"
     >
       <el-tabs type="border-card">
-        <el-tab-pane label="素材库">素材库</el-tab-pane>
+        <el-tab-pane label="素材库">
+          <!-- 传入useAgain为true表示复用该组件 -->
+          <img-control
+            :useAgain="true"/>
+        </el-tab-pane>
         <el-tab-pane label="上传图片">
           <input type="file" ref="file" @change="fileChange">
           <select-image :url="url" id="preview" v-if="DialogVisible">
@@ -25,11 +28,31 @@
 </template>
 
 <script>
+import ImgControl from '../../img_con/ImgControl.vue';
 import SelectImage from './SelectImage.vue';
 export default {
   name: "CoverDialog",
   components: {
-    SelectImage 
+    SelectImage,
+    ImgControl 
+  },
+  mounted() {
+    // 接受ImageItem发送过来用户所选择的图片对象
+    this.$bus.$on('selectImage',item => {
+      console.log('接收到的图片对象',item)
+      if(this.urlList.length < this.imageCount) {
+        this.urlList.push(item.url)
+        this.$message({
+          message: '图片添加成功',
+          type: 'success'
+        })
+        return
+      }
+      this.$message({
+        message: '所选图片达到最大张数，无法继续选择',
+        type: 'warning'
+      })
+    })
   },
   data(){
     return {
@@ -39,7 +62,9 @@ export default {
       // 是否编辑查看图片
       ifEdit: false,
       // 之前的文件对象
-      fileObj: null
+      fileObj: null,
+      // 当前选择图片的url列表
+      urlList: []
     };
   },
   props: {
@@ -56,6 +81,13 @@ export default {
       default() {
         return ''
       }
+    },
+    // 用户选择的封面种类，即图片个数
+    imageCount: {
+      required: true,
+      default() {
+        return 0
+      }
     }
   },
   methods: {
@@ -71,21 +103,27 @@ export default {
         this.ifEdit = false
         this.fileObj = getFile
       }
-      this.url = window.URL.createObjectURL(getFile)
+      const url = window.URL.createObjectURL(getFile)
+      if(this.urlList.length !== this.imageCount) {
+        // 将url存进url列表
+        this.urlList.push(url)
+      }
     },
-    // 确认选择时，将当前选择图片url传递给父组件
+    // 确认选择时，将当前选择图片列表urlList传递给父组件
     confirm() {
       this.$refs.file.value = ""
       this.DialogVisible = false
-      // 只有在非编辑模式下才会传递url
-      if(!this.ifEdit) {
-        this.$emit('getUrl',this.url)
+      // 只有在非编辑模式下才会传递urlList
+      if(!this.ifEdit && this.urlList.length <= this.imageCount) {
+        this.$emit('getUrl',this.urlList)
+        return
       }
+      
     },
-    // 默认情况下，打开对话框不可编辑
-    dialogOpen() {
-      this.ifEdit = true
-    }
+    // // 默认情况下，打开对话框不可编辑
+    // dialogOpen() {
+    //   this.ifEdit = true
+    // }
   },
   watch: {
     ifShow() {
@@ -102,6 +140,10 @@ export default {
 </script>
 
 <style scoped>
+.cover-dialog /deep/ .el-dialog{
+  width:80%;
+}
+
 #preview{
   font-size: 16px;
 }

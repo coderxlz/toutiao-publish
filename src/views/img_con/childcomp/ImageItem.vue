@@ -26,13 +26,27 @@
             @click="starImage(item)"
             :loading="isLoading"
           ></el-button>
+          <!-- 当组件没有被复用时，展示删除按钮，复用时展示选择按钮 -->
+          <!-- 没有复用，删除按钮 -->
           <el-button
+            v-if="!useAgain"
             type="danger"
             icon="el-icon-delete-solid"
             circle=""
             title="删除"
             size="small"
             @click="deleteImage(item)"
+            :loading="isLoading"
+          ></el-button>
+          <!-- 组件复用，提交按钮 -->
+          <el-button
+            v-else
+            type="success"
+            icon="el-icon-check"
+            circle=""
+            title="选择"
+            size="small"
+            @click="selectImage(item)"
             :loading="isLoading"
           ></el-button>
         </div>
@@ -68,6 +82,13 @@ export default {
       default() {
         return [];
       },
+    },
+    // 父组件图片管理是否复用
+    useAgain: {
+      required: true,
+      default() {
+        return false
+      }
     }
   },
   methods: {
@@ -108,7 +129,6 @@ export default {
     async deleteImage(item) {
       try {
         const data = await deleteImage(item.id)
-        console.log(data)
         this.$message({
           message: "删除成功",
           type: "danger"
@@ -134,7 +154,13 @@ export default {
         this.isLoading = false
       }
     },
+    // 提交图片
+    selectImage(item) {
+      // 将当前选择图片的url通过事件总线交给CoverDialog对话框进行处理
+      this.$bus.$emit('selectImage',item)
+    }
   },
+  
 };
 </script>
 

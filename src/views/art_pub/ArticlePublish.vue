@@ -73,9 +73,11 @@
     <!-- 上传封面弹出层 -->
     <cover-dialog
       :ifShow.sync="ifShow"
-      @getUrl="urlList.push($event)"
+      @getUrl="urlList = $event"
       :nowUrl="nowUrl"
+      :imageCount="pubForm.cover"
     />
+    <!-- 使用imageCount将当前选择的图片个数传递过去，限制用户选择 -->
   </div>
 </template>
 
@@ -140,6 +142,7 @@ export default {
           // handlers: handlers
         },
       },
+      // 表单验证规则
       rules: {
         title: [
           {required: true,message: '文章标题不能为空',trigger: 'change'},
@@ -172,9 +175,12 @@ export default {
     submitForm(draft) {
       this.pub_art(draft);
     },
+
+    // 重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+
     // 获得所有频道数据
     async getAllChannels() {
       const { data } = await getChannels();
@@ -184,49 +190,49 @@ export default {
 
     // 发布文章
     pub_art(draft) {
-      this.$refs.ruleForm.validate (async function (pass,obj) {
+      this.$refs.ruleForm.validate (async (pass,obj) => {
         // 只有校验通过，才会进行表单提交
         if( pass ) {
-          this.pub_loading = true;
-      try {
-        const data = await publishArt(
-          {
-            title: this.pubForm.title,
-            content: this.pubForm.content,
-            cover: {
-              type: 0,
-              images: [],
-            },
-            channel_id: this.pubForm.channel,
-          },
-          draft
-        );
-        console.log(data);
-        this.pub_loading = false;
-        this.$message({
-          message: "发布成功！",
-          type: "success",
-        });
-      } catch (e) {
-        if (e && e.response && e.response.status) {
-          switch (e.response.status) {
-            case 401:
-              this.$message({
-                message: "请先登录",
-                type: "warning",
-              });
-              break;
-            case 507:
-              this.$message({
-                message: "服务器或数据库异常，请稍后重试",
-                type: "warning",
-              });
-              break;
+          try {
+            this.pub_loading = true
+            const data = await publishArt(
+              {
+                title: this.pubForm.title,
+                content: this.pubForm.content,
+                cover: {
+                  type: this.pubForm.cover,
+                  images: this.urlList,
+                },
+                channel_id: this.pubForm.channel,
+              },
+              draft
+            );
+            console.log(data);
+            this.$message({
+              message: "发布成功！",
+              type: "success",
+            });
+            this.$router.push('/art_con')
+          } catch (e) {
+            if (e && e.response && e.response.status) {
+              switch (e.response.status) {
+                case 401:
+                  this.$message({
+                    message: "请先登录",
+                    type: "warning",
+                  });
+                  break;
+                case 507:
+                  this.$message({
+                    message: "服务器或数据库异常，请稍后重试",
+                    type: "warning",
+                  });
+                  break;
+              }
+            }
+          } finally {
+            this.pub_loading = false;
           }
-        }
-      } finally {
-        this.pub_loading = false;
-      }
         }else{
           return
         }
@@ -235,9 +241,7 @@ export default {
     },
     // 请求编辑文章数据
     async getArticle() {
-      console.log("需要编辑的文章id:", this.edit_id);
       const data = await getArtById(JSONbig.stringify(this.edit_id));
-      console.log("编辑文章数据", data);
     },
 
     onEditorChange({ quill, html, text }) {
